@@ -1,0 +1,14 @@
+@font-face {
+    font-family: "Chelsea";
+    src: url("../res/Chelsea II.ttf");
+}
+
+h1{
+    font-family: "europa", -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+h3{
+    font-family: "Chelsea", "europa", -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 4vw;
+    letter-spacing: 0.2em;
+}
