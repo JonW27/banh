@@ -1,0 +1,11 @@
+TODO:
+* Add support for keymapping stuff, like tables (put in settings)
+* create markdown tables button
+* for documents, allow LaTeX files to be used for setting formatting
+* allow rules to be set for files matching X criteria
+* create quick cheatsheet link (keymap + link), work similar to spotlight
+* allow markdown file inputs
+* list nesting should decrement if backspace is pressed
+* editor should include line numbers, word count, estimated reading time
+* enable really large nesting (pdflatex currently fails to do so)
+* use dragstart property to allow dragging of files (lazy)

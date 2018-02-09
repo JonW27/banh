@@ -7,8 +7,8 @@ app = Flask(__name__)
 def index():
     return render_template('auth.html');
 
-def editor():
-    
+@app.route("/editor")
+def editor():    
     return render_template('editor.html');
 
 if __name__ == "__main__":
