@@ -1,7 +1,24 @@
 import os
 from flask import Flask, render_template
+from flask_assets import Environment, Bundle
 
 app = Flask(__name__)
+assets = Environment(app)
+
+css = Bundle('css/main.css', filters="cssmin", output="gen/main.css")
+assets.register('css_all', css)
+
+cm_js = Bundle('codemirror-5.34.0/lib/codemirror.js', 'codemirror-5.34.0/mode/markdown/markdown.js', filters='jsmin', output='gen/cm.js')
+assets.register('cm_js', cm_js)
+
+cm_css = Bundle('codemirror-5.34.0/lib/codemirror.css', filters="cssmin", output="gen/cm.css")
+assets.register('cm_css', cm_css)
+
+preview = Bundle('demo.pdf')
+assets.register('preview', preview)
+
+# js = Bundle('jquery.js', 'base.js', 'widgets.js', filters='jsmin', output='gen/packed.js')
+# assets.register('js_all', js)
 
 @app.route("/")
 def index():
@@ -13,4 +30,4 @@ def editor():
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8080))
-    app.run(host='0.0.0.0', port=port)
+    app.run(host='0.0.0.0', port=port, debug=True)

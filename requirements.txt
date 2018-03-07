@@ -1,6 +1,7 @@
 argh==0.26.2
 click==6.7
 Flask==0.12.2
+Flask-Assets==0.12
 itsdangerous==0.24
 Jinja2==2.10
 MarkupSafe==1.0
@@ -9,5 +10,6 @@ psycopg2==2.7.3.2
 pypandoc==1.4
 PyYAML==3.12
 watchdog==0.8.3
+webassets==0.12.1
 Werkzeug==0.14.1
 when-changed==0.3.0
