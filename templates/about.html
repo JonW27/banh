@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+     <head>
+        <title>Bánh LaTeX Cloud - About</title>
+        <meta charset='utf-8'>
+         
+        <link rel="stylesheet" href="https://use.typekit.net/trv8qnb.css">
+	{% assets "css_all" %}
+	    <link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}">
+        {% endassets %}
+        <!--<link rel="stylesheet" type="text/css" href="css/main.css">
+        <script src="codemirror-5.34.0/mode/markdown/markdown.js"></script>-->
+        <style>
+            #future{
+                font-family: Helvetica, sans-serif;
+            }
+
+        </style>
+    </head>
+    <body>
+        <div id="menu">
+            <ul class="menu">
+                <li><a href="/">bánh<span id="cloud">CLOUD</span></a></li>
+                <div class="right">
+                    <li><a href="/settings">Settings</a></li>
+                    <li><a href="/logout">Logout</a></li>
+                </div>
+            </ul>
+        </div>
+        <h1>
+            About
+        </h1>
+        <div id="future">    
+            <em>
+                banh version {{ version }}
+            </em>
+            <p>to do:</p>
+            <ul>
+                    <li>Make better support for excluded symbols like &lt; and &gt;</li>
+                    <li>Make reload animation not as fast (they're at epilepsy level right now)</li>
+                    <li>Add actual user accounts</li>
+                    <li>Setup postgres database</li>
+                    <li>Create saving of text</li>
+                    <li>Mathjax support</li>
+            </ul>
+        </div>
+    </body>
+</html>

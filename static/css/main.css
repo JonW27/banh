@@ -41,14 +41,6 @@ body{
   max-height: 50vw;
 }
 
-a{
-    color: black;
-}
-a:hover{
-    color:#eee;
-    background: black;
-}
-
 embed{
     height: 30vw;
     width: 48vw;
@@ -56,14 +48,21 @@ embed{
 #menu > ul{
     list-style-type: none;
 }
-li{
+.menu li{
     display: inline;
     font-size: 2vw;
     font-family: "Meslo", -apple-system, BlinkMacSystemFont, sans-serif;
 }
 .menu a{
     text-decoration: none;
+    color: black;
 }
+
+.menu a:hover{
+    color:#eee;
+    background: black;
+}
+
 #menu{
     border-bottom: .15vw solid #eee;
 }

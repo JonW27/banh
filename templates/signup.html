@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+     <head>
+        <title>Bánh LaTeX Cloud - Signup</title>
+        <meta charset='utf-8'>
+         
+        <link rel="stylesheet" href="https://use.typekit.net/trv8qnb.css">
+
+        {% assets "spectre_css" %}
+        <link rel='stylesheet' type='text/css' href="{{ ASSET_URL }}">
+        {% endassets %}
+
+	    {% assets "css_all" %}
+        <link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}">
+        {% endassets %}
+        <style>
+            .topBox {
+                padding-top: 5vw;
+            }
+
+        </style>
+        <script>
+
+            function sendXMLHTTPRequest(username, passwd){
+                var req = new XMLHttpRequest();
+                req.onreadystatechange = function(){
+                    if(this.readyState == 4 && this.status == 204){
+                        alert("Signup successful.");
+                        window.location.href="/login";
+                    }
+                    else if(this.status == 400 && this.readyState == 4){
+                        alert(req.responseText);
+                    }
+                    else if(this.status == 200 && this.readyState == 4){
+                        alert(req.responseText);
+                    }    
+                }
+                req.open("POST", "/signup_handler", true);
+                req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                req.send("username="+username+"&passwd="+passwd);
+            }
+
+            function submit(){
+                var username = document.getElementById("username").value;
+                    var passwd = document.getElementById("password").value;
+                    var confirm = document.getElementById("confirm_password").value;
+
+                    // some really stupid client-side validation that won't ever actually prevent someone from messing with the inputs
+
+                    if(passwd.length <= 7){
+                        alert("Password does not meet requirement of at least 8 characters");
+                    } else if(passwd != confirm){
+                        alert("Passwords do not match.");
+                    } else {
+                        sendXMLHTTPRequest(username, passwd);
+                    }
+            }
+
+            window.addEventListener("load", function(){
+                document.getElementById("submission").addEventListener("click", function(){
+                    submit();
+                });
+            });
+
+            window.addEventListener("load", function(){
+                document.getElementById("confirm_password").addEventListener("keydown", function(e){
+                    if(e.keyCode == "13"){
+                        submit();
+                    }
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <div id="menu">
+            <ul class="menu">
+                <li><a href="/">bánh<span id="cloud">CLOUD</span></a></li>
+                <div class="right">
+                    <li><a href="/about">Goals</a></li>
+                    <li><a href="/roadmap">Roadmap</a></li>
+                </div>
+            </ul>
+        </div>
+        <div class="container">
+            <div class="columns">
+                <div class="column col-2 col-mx-auto topBox">
+                    <h1>
+                        Signup
+                    </h1>
+                    <div class="form-group">
+                        <label class='form-label' for='username'>Username:</label>
+                        <input class='form-input' type='text' id='username' name='username' placeholder='Username'>
+                    </div>
+                    <div class="form-group">
+                            <label class='form-label tooltip tooltip-left' for='password' data-tooltip="Length must be greater than 7. Highly recommend using a random sequence of words.">Password:</label>
+                            <input class='form-input' type='password' id='password' name='password'>
+                    </div>
+                    <div class="form-group">
+                            <label class='form-label tooltip tooltip-left' for='confirm_password' data-tooltip="Must match password set in previous input box.">Confirm Password:</label>
+                            <input class='form-input' type='password' id='confirm_password' name='confirm_password'>
+                    </div>
+                    <button class="btn btn-primary" id="submission">Ready, Set, Go!</button>
+                </div>
+            </div>
+        </div>
+        
+    </body>
+</html>

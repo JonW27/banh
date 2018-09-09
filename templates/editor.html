@@ -11,7 +11,29 @@
         <script src="codemirror-5.34.0/lib/codemirror.js"></script>-->
 	{% assets "cm_js" %}
 	    <script src="{{ ASSET_URL }}"></script>
-	{% endassets %}
+    {% endassets %}
+    
+        <script>
+            function newXMLHTTPRequest(content){
+                var req = new XMLHttpRequest();
+                req.onreadystatechange = function(){
+                    if(this.readyState == 4 && this.status == 200){
+                        var d = new Date();
+                        var n = d.getTime();
+                        {% assets "preview" %}
+                        var embed = document.getElementById("documentReader")
+                        var clone=embed.cloneNode(true);
+                        clone.setAttribute('src', "{{ASSET_URL}}"+"?time="+n);
+                        embed.parentNode.replaceChild(clone,embed);
+                        {% endassets %}
+                        console.log("Done! Woo!");
+                    }
+                }
+                req.open("POST", "/update", true);
+                req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                req.send("content="+content);
+            }
+        </script>
          
         <link rel="stylesheet" href="https://use.typekit.net/trv8qnb.css">
 	{% assets "css_all" %}
@@ -34,7 +56,7 @@
         <div id="editor">   
         </div>
 	{% assets "preview" %}
-           <embed src="{{ASSET_URL}}" />
+           <embed src="{{ASSET_URL}}" id="documentReader"/>
 	{% endassets %}
         <script>
             var myCodeMirror = CodeMirror(document.getElementById("editor"), {
@@ -43,6 +65,16 @@
               viewportMargin: Infinity,
               lineWrapping: true
             });
+            var pending;
+            myCodeMirror.on("changes", function(){
+                clearTimeout(pending);
+                pending = setTimeout(update, 600);
+                console.log("values changed");
+            });
+            function update(){
+                var content = myCodeMirror.getValue();
+                newXMLHTTPRequest(content);
+            }
          </script>
     </body>
 </html>
