@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template, request, redirect, url_for, Response
+from flask import Flask, render_template, request, redirect, url_for, Response, escape, session
 from flask_assets import Environment, Bundle
 import psycopg2
 import pypandoc
@@ -12,6 +12,7 @@ app = Flask(__name__)
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 app.jinja_env.auto_reload = True
 app.config['TEMPLATES_AUTO_RELOAD'] = True
+app.secret_key = os.urandom(24)
 assets = Environment(app)
 version = 0.1
 
@@ -57,7 +58,7 @@ def signup_handler():
 
         conn = psycopg2.connect(DATABASE_URL, sslmode='require')
         cur = conn.cursor()
-        cur.execute("""SELECT * FROM users WHERE username = %s;""", username)
+        cur.execute("""SELECT * FROM users WHERE username = (%s);""", (username,))
         if cur.fetchone() is not None:
             return Response("Username already taken.", 200, mimetype="application/txt")
 
@@ -77,7 +78,10 @@ def signup_handler():
 
 @app.route("/login")
 def login():
-    return render_template('login.html')
+    if 'username' in session:
+        return redirect(url_for("app_dashboard_handler"))
+    else:    
+        return render_template('login.html')
 
 @app.route("/login_handler", methods=['GET', 'POST'])
 def login_handler():
@@ -97,13 +101,41 @@ def login_handler():
         if data is None:
             return Response("We do not have a record of that username.", 200, mimetype="application/txt")
         hashed_passwd = data[2]
+        cur.close()
+        conn.close()
         if bcrypt.checkpw(passwd, hashed_passwd):
+            session['username'] = username
             return Response(status=204)
         else:
             return Response("Incorrect password.", 200, mimetype="application/html")
     else:
-        return redirect(url_for("login"))        
+        return redirect(url_for("login"))
 
+@app.route('/logout')
+def logout():
+    # remove the username from the session if it's there
+    session.pop('username', None)
+    return redirect(url_for('index'))        
+
+@app.route("/app")
+def app_dashboard_handler():
+    if 'username' in session:
+        # get user files from database files table
+        conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+        cur = conn.cursor()
+
+        username = escape(session['username'])
+
+        cur.execute("""SELECT id FROM users WHERE username = (%s);""", (username,))
+        uid = cur.fetchone()
+        cur.execute("""SELECT content FROM files WHERE id = (%s);""", (uid,))
+        files = cur.fetchall()
+        conn.close()
+        cur.close()
+        app.logger.info(files)
+        return render_template('app.html', username = username, files = files)
+    else:
+        return redirect(url_for("login"))
 
 @app.route("/editor")
 def editor():    

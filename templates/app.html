@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+     <head>
+        <title>Bánh LaTeX Cloud - Login</title>
+        <meta charset='utf-8'>
+         
+        <link rel="stylesheet" href="https://use.typekit.net/trv8qnb.css">
+
+        {% assets "spectre_css" %}
+        <link rel='stylesheet' type='text/css' href="{{ ASSET_URL }}">
+        {% endassets %}
+
+	    {% assets "css_all" %}
+        <link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}">
+        {% endassets %}
+        <style>
+            .topBox {
+                padding-top: 5vw;
+            }
+            .sidebar {
+                margin-left: 2vw;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="menu">
+            <ul class="menu">
+                <li><a href="/">bánh<span id="cloud">CLOUD</span></a></li>
+                <div class="right">
+                    <li><a href="/settings">Settings</a></li>
+                    <li><a href="/logout">Logout</a></li>
+                </div>
+            </ul>
+        </div>
+        <div class="container">
+            <div class="columns">
+                <div class="column col-12">
+                    <div class="sidebar column col-4 col-mr-auto topBox">
+                            <div class="popover popover-bottom">
+                                    <button class="btn btn-primary">Create New...</button>
+                                    <div class="popover-container">
+                                        <div class="card">
+                                            <button class="btn btn-primary" id="create_document">Document</button>
+                                            <button class="btn" id="create_folder">Folder</button>
+                                        </div>    
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
+                    <div class="divider-vert"></div>
+                    <div class="main column">
+                        <div class="column col-2 col-mx-auto topBox">
+                                <h1>
+                                    Welcome, {{ username}}!
+                                </h1>
+                        </div>
+                        {% if files is defined  and files %}
+                                
+                        {% else %}
+                            <div class="column col-4 col-mx-auto topBox">
+                                    <h2>No files yet! Click the "New Document" option on the left to create one.</h2>
+                            </div>
+                        {% endif %}    
+                    </div>
+                </div>
+            </div>    
+        </div>
+        
+    </body>
+</html>
