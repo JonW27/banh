@@ -21,6 +21,14 @@
                 margin-left: 2vw;
             }
         </style>
+        <script>
+            document.addEventListener("DOMContentLoaded", function(){
+                create_doc = document.getElementById("create_document");
+                create_doc.addEventListener("click", function(){
+                    window.location.href="/editor";
+                });
+            });
+        </script>
     </head>
     <body>
         <div id="menu">

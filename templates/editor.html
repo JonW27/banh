@@ -33,6 +33,24 @@
                 req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
                 req.send("content="+content);
             }
+
+            function save(content){
+                var status = document.getElementById("document_status");
+                status.textContent = "saving...";
+                var document_title = document.getElementById("document_title").value;
+                var req = new XMLHttpRequest();
+                req.onreadystatechange = function(){
+                    if(this.readyState == 4 && this.status == 200){
+                        status.textContent = "Your progress has been saved.";
+                    }
+                    else if(this.status == 400 && this.readyState == 4){
+                        alert(req.responseText);
+                    }
+                }
+                req.open("POST", "/save", true);
+                req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                req.send("doc_title="+document_title+"&content="+content);
+            }
         </script>
          
         <link rel="stylesheet" href="https://use.typekit.net/trv8qnb.css">
@@ -52,7 +70,9 @@
                 </div>
             </ul>
         </div>
-        <h1 contenteditable="true">Untitled Document</h1>
+        <h1 contenteditable="true" id="document_title">Untitled Document</h1>
+        <em id="document_status">waiting for changes...</em>
+        <br><br>
         <div id="editor">   
         </div>
 	{% assets "preview" %}
@@ -74,6 +94,7 @@
             function update(){
                 var content = myCodeMirror.getValue();
                 newXMLHTTPRequest(content);
+                save(content);
             }
          </script>
     </body>

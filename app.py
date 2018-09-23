@@ -4,6 +4,7 @@ from flask_assets import Environment, Bundle
 import psycopg2
 import pypandoc
 import tempfile
+import uuid
 import bcrypt
 
 import logging
@@ -17,6 +18,7 @@ assets = Environment(app)
 version = 0.1
 
 DATABASE_URL = os.environ['DATABASE_URL']
+# export DATABASE_URL="postgres://jonathan:<CHANGE_PASSWORD_HERE>@localhost:5432/postgres"
 
 css = Bundle('css/main.css', filters="cssmin", output="gen/main.css")
 assets.register('css_all', css)
@@ -128,7 +130,7 @@ def app_dashboard_handler():
 
         cur.execute("""SELECT id FROM users WHERE username = (%s);""", (username,))
         uid = cur.fetchone()
-        cur.execute("""SELECT content FROM files WHERE id = (%s);""", (uid,))
+        cur.execute("""SELECT content FROM files WHERE user_id = (%s);""", (uid,))
         files = cur.fetchall()
         conn.close()
         cur.close()
@@ -138,8 +140,11 @@ def app_dashboard_handler():
         return redirect(url_for("login"))
 
 @app.route("/editor")
-def editor():    
-    return render_template('editor.html')
+def editor():
+    if 'username' in session:    
+        return render_template('editor.html')
+    else:
+        return redirect(url_for("login"))
 
 @app.route("/update", methods=['GET', 'POST'])
 def update():
@@ -159,6 +164,39 @@ def update():
         return Response("ALL GOOD", status=200, mimetype='application/txt')
     else:
         return redirect(url_for("index"))
+
+@app.route("/save", methods=['GET', 'POST'])
+def save():
+    if request.method == "POST":
+        unsanitized_doc_title = request.form['doc_title']
+        unsanitized_content = request.form['content']
+        
+        # generate unique id for file
+        doc_id = uuid.uuid4().hex
+
+        # connect to db
+        conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+        cur = conn.cursor()
+
+        # grab user id
+        username = escape(session['username'])
+
+        cur.execute("""SELECT id FROM users WHERE username = (%s);""", (username,))
+        user_id = cur.fetchone()
+
+        # add to file table
+        try:
+            cur.execute("""INSERT INTO files (doc_id, user_id, doc_title, content) VALUES (%s, %s, %s, %s);""", (doc_id, user_id, unsanitized_doc_title, unsanitized_content))
+        except:
+            return Response("Record could not be inserted into database.", 400, mimetype="application/txt")
+
+        conn.commit()
+        conn.close()
+        cur.close()
+
+        return Response("ALL GOOD", status=200, mimetype='application/txt')
+    else:
+        return redirect(url_for("editor"))
 
 @app.route("/about")
 def future():

@@ -9,3 +9,5 @@ TODO:
 * editor should include line numbers, word count, estimated reading time
 * enable really large nesting (pdflatex currently fails to do so)
 * use dragstart property to allow dragging of files (lazy)
+* version control
+* keyboard shortcuts for template files

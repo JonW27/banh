@@ -1,0 +1,5 @@
+DESIGN PHILOSOPHY:
+
+UX > UI
+Be minimalist
+For power users
