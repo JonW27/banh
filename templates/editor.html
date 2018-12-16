@@ -51,6 +51,14 @@
                 req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
                 req.send("doc_title="+document_title+"&content="+content);
             }
+            
+            document.addEventListener("DOMContentLoaded", function(){
+                document.querySelector('h1[contenteditable="true"]').addEventListener("paste", function(e) {
+                    e.preventDefault();
+                    var text = e.clipboardData.getData("text/plain");
+                    document.execCommand("insertHTML", false, text);
+                });
+            });
         </script>
          
         <link rel="stylesheet" href="https://use.typekit.net/trv8qnb.css">
